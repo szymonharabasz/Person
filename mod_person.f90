@@ -23,6 +23,13 @@ module mod_person
         module procedure :: person_constructor
     end interface Person
 
+
+    interface operator(+)
+        module procedure :: plus_str_str
+        module procedure :: plus_str_int
+        module procedure :: plus_int_str
+    end interface
+
 contains
     impure elemental subroutine greet(self)
         class(Person), intent(in) :: self
@@ -46,7 +53,7 @@ contains
     pure function getName(self) result(name)
         class(Person), intent(in) :: self
         character(:), allocatable :: name
-        allocate(name, source = self % name)
+        allocate(name, source = trim(self % name))
     end function getName
 
     subroutine setName(self, name)
@@ -58,7 +65,7 @@ contains
     pure function getOccupation(self) result(occupation)
         class(Person), intent(in) :: self
         character(:), allocatable :: occupation
-        allocate(occupation, source = self % occupation)
+        allocate(occupation, source = trim(self % occupation))
     end function getOccupation
 
     subroutine setOccupation(self, occupation)
@@ -82,5 +89,58 @@ contains
         end if
 
     end function person_constructor
+
+    function plus_str_str(a, b) result(c)
+        character (len=*), intent(in) :: a
+        character (len=*), intent(in) :: b
+        character (:), allocatable :: c
+        c = a // b
+    end function plus_str_str
+
+    function plus_str_int(s, i) result(res)
+
+        character (len=*), intent(in) :: s
+        integer, intent(in) :: i
+        integer :: alloc_size
+        character (:), allocatable :: res
+
+        if (i >= 100) then
+            alloc_size = len(s) + 3
+        else
+            alloc_size = len(s) + 2
+        end if
+
+        allocate(character(alloc_size) :: res)
+
+        if (i >= 100) then
+            write(res,'(a,i3)') s, i
+        else
+            write(res,'(a,i2)') s, i
+        end if
+
+    end function plus_str_int
+
+    function plus_int_str(i, s) result(res)
+
+        integer, intent(in) :: i
+        character (len=*), intent(in) :: s
+        integer :: alloc_size
+        character (:), allocatable :: res
+
+        if (i >= 100) then
+            alloc_size = len(s) + 3
+        else
+            alloc_size = len(s) + 2
+        end if
+
+        allocate(character(alloc_size) :: res)
+
+        if (i >= 100) then
+            write(res,'(i3,a)') i, s
+        else
+            write(res,'(i2,a)') i, s
+        end if
+
+    end function plus_int_str
 
 end module mod_person

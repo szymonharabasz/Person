@@ -1,11 +1,11 @@
 program main
     use mod_person
-    use iso_fortran_env, only: int8
+    use iso_fortran_env, only: int32
 
     implicit none
 
     type(Person) :: people(3)
-    integer(int8) :: i
+    integer(int32) :: i
     people = [ &
             Person(name="John", age=24, occupation="Programmer"), &
             Person(name="Davy", age=154, occupation="Pirate"), &
@@ -15,13 +15,13 @@ program main
     call people(1) % setAge(age=22)
     call people(1) % setName(name='Luke')
     do i = 1, 3
-        print *, people(i) % getName(), ' is ', people(i) % getAge(), &
-                ' years old and works as ' // people(i) % getOccupation() // '.'
+        print *, i +  '. ' + people(i) % getName() + ' is ' + people(i) % getAge() + &
+                ' years old and works as ' + people(i) % getOccupation() + '.'
     end do
     call people(2) % setAge(-1)
     do i = 1, 3
-        print *, people(i) % getName(), ' is ', people(i) % getAge(), &
-                ' years old and works as ' // people(i) % getOccupation() // '.'
+        print *, people(i) % getName() +  ' is ' + people(i) % getAge() + &
+                ' years old and works as ' + people(i) % getOccupation() + '.'
     end do
 
 end program main
